@@ -21,10 +21,12 @@ install:
   - cmake ../cmake-3.3.2 > /dev/null
   - make > /dev/null
   - sudo make install
-
-after_install:
   - which cmake
   - cmake --version
+  - gcc --version
+  - ls -lha /usr/local/bin
+  - ls -lha /usr/local/share
+  - ls -lha /usr/local/share/cmake-3.3
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
