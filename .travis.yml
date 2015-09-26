@@ -22,7 +22,6 @@ install:
   - make > /dev/null
   - sudo make install
   - which cmake
-  - cmake --version
   - gcc --version
   - ls -lha /usr/local/bin
   - ls -lha /usr/local/share
