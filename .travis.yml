@@ -1,0 +1,38 @@
+
+language: cpp
+sudo: required
+
+compiler:
+  - gcc
+addons: &gcc5
+  apt:
+    packages: g++-5
+    sources: *sources
+
+install:
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - git clone https://github.com/biicode/misc.git biicode_misc
+  - ./biicode_misc/travis/cpp/gcc_update.sh --version 4.9
+  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
+  - wget http://cmake.org/files/v3.3/cmake-3.3.2.tar.gz
+  - tar -xvf cmake-3.3.2.tar.gz > /dev/null
+  - mkdir cmake-build
+  - cd cmake-build
+  - cmake ../cmake-3.3.2 > /dev/null
+  - make > /dev/null
+  - sudo make install
+
+after_install:
+  - which cmake
+  - cmake --version
+
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - git clone git@github.com:ComicSansMS/GhulbusBase.git gbBase
+  - cd gbBase
+  - cd build
+  - cmake ..
+
+script:
+  - make
+  - make test
