@@ -6,7 +6,7 @@ compiler:
   - gcc
 addons: &clang34
   apt:
-    packages: clang-3.4 libstdc++6
+    packages: clang-3.4
     sources: *sources
 
 install:
