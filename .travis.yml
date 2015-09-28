@@ -4,9 +4,9 @@ sudo: false
 
 compiler:
   - gcc
-addons: &gcc49
+addons: &gcc48
   apt:
-    packages: g++-4.9
+    packages: g++-4.8
     sources: *sources
 
 install:
