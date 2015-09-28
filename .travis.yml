@@ -12,6 +12,7 @@ addons: &clang34
 install:
   - gcc --version
   - clang --version
+  - clang++ --version
   - which clang
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
@@ -19,7 +20,7 @@ install:
   - tar -xvf cmake-3.3.2.tar.gz > /dev/null
   - mkdir cmake-build && mkdir cmake-install
   - cd cmake-build
-  - cmake -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install -DCMAKE_CXX_COMPILE=g++48 -DCMAKE_C_COMPILER=gcc48 ../cmake-3.3.2
+  - cmake -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install -DCMAKE_CXX_COMPILE=clang++ -DCMAKE_C_COMPILER=clang ../cmake-3.3.2
   - ls -lha ${DEPS_DIR}/cmake-install
   
   - which cmake
