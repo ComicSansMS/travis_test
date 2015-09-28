@@ -1,26 +1,24 @@
 
 language: cpp
-sudo: required
+sudo: false
 
 compiler:
   - gcc
-addons: &gcc5
+addons: &gcc4.9
   apt:
-    packages: g++-5
+    packages: g++-4.9
     sources: *sources
 
 install:
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - git clone https://github.com/biicode/misc.git biicode_misc
-  - ./biicode_misc/travis/cpp/gcc_update.sh --version 4.9
   - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
   - wget http://cmake.org/files/v3.3/cmake-3.3.2.tar.gz
   - tar -xvf cmake-3.3.2.tar.gz > /dev/null
-  - mkdir cmake-build
+  - mkdir cmake-build && mkdir cmake-install
   - cd cmake-build
-  - cmake ../cmake-3.3.2 > /dev/null
+  - cmake ../cmake-3.3.2 -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install > /dev/null
   - make > /dev/null
-  - sudo make install
+  - make install
   - which cmake
   - gcc --version
   - ls -lha /usr/local/bin
