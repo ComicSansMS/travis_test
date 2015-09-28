@@ -4,7 +4,7 @@ sudo: false
 
 compiler:
   - gcc
-addons: &gcc4.9
+addons: &gcc49
   apt:
     packages: g++-4.9
     sources: *sources
@@ -19,11 +19,10 @@ install:
   - cmake ../cmake-3.3.2 -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install > /dev/null
   - make > /dev/null
   - make install
+  - ls -lha ${DEPS_DIR}/cmake-install
+  
   - which cmake
   - gcc --version
-  - ls -lha /usr/local/bin
-  - ls -lha /usr/local/share
-  - ls -lha /usr/local/share/cmake-3.3
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
