@@ -6,23 +6,24 @@ compiler:
   - gcc
 addons: &gcc48
   apt:
-    packages: g++-4.8
+    packages: gcc-4.8
     sources: *sources
 
 install:
+  - gcc --version
+  - gcc48 --version
+  - g++ --version
+  - g++48 --version
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
   - wget http://cmake.org/files/v3.3/cmake-3.3.2.tar.gz
   - tar -xvf cmake-3.3.2.tar.gz > /dev/null
   - mkdir cmake-build && mkdir cmake-install
   - cd cmake-build
-  - cmake ../cmake-3.3.2 -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install > /dev/null
-  - make > /dev/null
-  - make install
+  - cmake -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install -DCMAKE_CXX_COMPILE=g++48 -DCMAKE_C_COMPILER=gcc48 ../cmake-3.3.2
   - ls -lha ${DEPS_DIR}/cmake-install
   
   - which cmake
-  - gcc --version
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
