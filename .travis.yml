@@ -6,7 +6,7 @@ compiler:
   - gcc
 addons: &clang34
   apt:
-    packages: clang-3.4
+    packages: clang-3.4 libstdc++6
     sources: *sources
 
 install:
@@ -20,9 +20,11 @@ install:
   - tar -xvf cmake-3.3.2.tar.gz > /dev/null
   - mkdir cmake-build && mkdir cmake-install
   - cd cmake-build
-  - cmake -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install -DCMAKE_CXX_COMPILE=clang++ -DCMAKE_C_COMPILER=clang ../cmake-3.3.2
+  - cmake -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install -DCMAKE_CXX_COMPILE=clang++ -DCMAKE_C_COMPILER=clang ../cmake-3.3.2 > cmake_configure.log
+  - make -j 2 > cmake_compile.log
+  - make install
   - ls -lha ${DEPS_DIR}/cmake-install
-  
+  - PATH=$PATH:${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin
   - which cmake
 
 before_script:
