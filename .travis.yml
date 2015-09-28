@@ -9,7 +9,9 @@ addons: &clang34
     packages:
       - clang-3.4
       - libboost-all-dev
-    sources: *sources
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
 
 install:
   - gcc --version
