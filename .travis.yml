@@ -33,7 +33,7 @@ before_script:
   - git clone https://github.com/ComicSansMS/GhulbusBase.git gbBase
   - cd gbBase
   - cd build
-  - cmake ..
+  - cmake -DCMAKE_CXX_COMPILE=clang++ -DCMAKE_C_COMPILER=clang ..
 
 script:
   - make
