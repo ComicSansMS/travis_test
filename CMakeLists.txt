@@ -84,13 +84,15 @@ if(GB_BUILD_TESTS)
             set(GB_EXTERNAL_CATCH_URL https://github.com/philsquared/Catch/archive/v1.2.1-develop.12.zip)
             set(GB_EXTERNAL_CATCH_MD5 cda228922a1c9248364c99a3ff9cd9fa)
         else()
-            set(GB_EXTERNAL_CATCH_URL http://github.com/philsquared/Catch/archive/v1.2.1-develop.12.tar.gz)
+            set(GB_EXTERNAL_CATCH_URL https://github.com/philsquared/Catch/archive/v1.2.1-develop.12.tar.gz)
             set(GB_EXTERNAL_CATCH_MD5 a8dfb7be899a6e7fb30bd55d53426122)
         endif()
         ExternalProject_Add(Catch-External
             PREFIX ${CMAKE_BINARY_DIR}/external/Catch
-            URL ${GB_EXTERNAL_CATCH_URL}
-            URL_HASH MD5=${GB_EXTERNAL_CATCH_MD5}
+            GIT_REPOSITORY https://github.com/philsquared/Catch.git
+            GIT_TAG 0c1c9fa9229c7358ce16c9910004a39290b20f5f
+            #URL ${GB_EXTERNAL_CATCH_URL}
+            #URL_HASH MD5=${GB_EXTERNAL_CATCH_MD5}
             CONFIGURE_COMMAND ""
             BUILD_COMMAND ""
             INSTALL_COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/external/Catch/src/Catch-External/single_include/catch.hpp
