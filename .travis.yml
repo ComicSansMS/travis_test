@@ -8,11 +8,13 @@ addons: &clang34
   apt:
     packages:
       - clang-3.4
-      - libboost1.58-all-dev
+      - libboost1.55-all-dev
+      - boost1.55
     sources:
-      - debian-sid
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.6
+      - boost-latest
+      - debian-sid
 
 install:
   - gcc --version
