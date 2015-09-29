@@ -10,7 +10,7 @@ addons: &clang34
       - clang-3.4
       - libboost1.58-all-dev
     sources:
-      - deb http://ftp.us.debian.org/debian unstable main contrib non-free
+      - debian-sid
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.6
 
