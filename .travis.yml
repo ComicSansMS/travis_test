@@ -8,6 +8,8 @@ addons: &clang34
   apt:
     packages:
       - clang-3.4
+      - g++-5
+      - gcc-5
       - libboost1.55-dev
       - libboost-date-time1.55-dev
       - libboost-log1.55-dev
@@ -30,7 +32,7 @@ install:
   - tar -xvf cmake-3.3.2.tar.gz > /dev/null
   - mkdir cmake-build && mkdir cmake-install
   - cd cmake-build
-  - cmake -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ../cmake-3.3.2 > cmake_configure.log
+  - cmake -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install -DCMAKE_CXX_COMPILER=g++5 -DCMAKE_C_COMPILER=gcc5 ../cmake-3.3.2 > cmake_configure.log
   - make -j 2 > cmake_compile.log
   - make install
   - ls -lha ${DEPS_DIR}/cmake-install
@@ -45,7 +47,7 @@ before_script:
   - cd gbBase
   - cp ../CMakeLists.txt .
   - cd build
-  - cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ..
+  - cmake -DCMAKE_CXX_COMPILER=g++5 -DCMAKE_C_COMPILER=gcc5 ..
 
 script:
   - make
