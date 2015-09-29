@@ -34,8 +34,10 @@ install:
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
+  - ls -lha
   - git clone https://github.com/ComicSansMS/GhulbusBase.git gbBase
   - cd gbBase
+  - cp ../CMakeLists.txt .
   - cd build
   - cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang ..
 
