@@ -11,6 +11,7 @@ addons: &clang34
       - clang-3.4
       - g++-5
       - gcc-5
+      - ninja-build
       # doxygen
       - doxygen
       - graphviz
@@ -69,9 +70,6 @@ script:
   - make test
   - cd ..
 
-after_success:
+after_script:
   - cd build-static
   - make doxygen-doc
-
-after_failure:
-  - cd ${DEPS_DIR} && cat cmake_configure.log
