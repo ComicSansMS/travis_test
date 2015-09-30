@@ -40,6 +40,7 @@ install:
   - tar -xvf cmake-3.3.2.tar.gz > /dev/null
   - mkdir cmake-build && mkdir cmake-install
   - cd cmake-build
+  - cmake
   - cmake -GNinja -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 ../cmake-3.3.2
   - ninja
   - ninja install
