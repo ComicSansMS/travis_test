@@ -10,12 +10,16 @@ addons: &clang34
       - clang-3.4
       - g++-5
       - gcc-5
+      - doxygen
+      - graphviz
+      - mscgen
       - libboost1.55-dev
       - libboost-date-time1.55-dev
       - libboost-log1.55-dev
       - libboost-thread1.55-dev
       - libboost-wave1.55-dev
       - libboost1.55-all-dev
+
     sources:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.6
@@ -58,5 +62,5 @@ before_script:
 script:
   - cd build-static
   - make test
-  - cd build-shared
+  - cd ../build-shared
   - make test
