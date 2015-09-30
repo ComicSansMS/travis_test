@@ -33,7 +33,6 @@ install:
   - gcc --version
   - clang --version
   - clang++ --version
-  - ninja -h
   - which clang
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
