@@ -80,5 +80,5 @@ script:
 
 after_script:
   - cd ${TRAVIS_BUILD_DIR}/gbBase
-  - cd build-static
+  - cd build-static-gcc5
   - make doxygen-doc
