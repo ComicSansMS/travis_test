@@ -8,7 +8,7 @@ addons: &clang34
   apt:
     packages:
         # compiler
-      - clang-3.4
+      - clang-3.6
       - g++-5
       - gcc-5
       - ninja-build
@@ -55,22 +55,22 @@ before_script:
   - git clone https://github.com/ComicSansMS/GhulbusBase.git gbBase
   - cd gbBase
   - cp ../CMakeLists.txt .
-  - mkdir build-static && mkdir build-shared
-  - cd build-static
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DBUILD_SHARED_LIBS=OFF ..
+  - mkdir build-static-gcc5 && mkdir build-shared-gcc5 && mkdir build-static-clang36 && mkdir build-shared-clang36
+  - cd build-static-gcc5
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
   - make
-  - cd ../build-shared
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DBUILD_SHARED_LIBS=ON ..
+  - cd ../build-shared-gcc5
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
   - make
-  - cd ..
+  - cd ${TRAVIS_BUILD_DIR}/gbBase
 
 script:
-  - cd build-static
+  - cd build-static-gcc5
   - make test
-  - cd ../build-shared
+  - cd ../build-shared-gcc5
   - make test
-  - cd ..
 
 after_script:
+  - cd ${TRAVIS_BUILD_DIR}/gbBase
   - cd build-static
   - make doxygen-doc
