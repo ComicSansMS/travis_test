@@ -7,19 +7,22 @@ compiler:
 addons: &clang34
   apt:
     packages:
+        # compiler
       - clang-3.4
       - g++-5
       - gcc-5
+      # doxygen
       - doxygen
       - graphviz
-      - mscgen
+      # mscgen is currently not whitelisted :(
+      #- mscgen
+      # third-party dependencies
       - libboost1.55-dev
       - libboost-date-time1.55-dev
       - libboost-log1.55-dev
       - libboost-thread1.55-dev
       - libboost-wave1.55-dev
       - libboost1.55-all-dev
-
     sources:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.6
@@ -64,3 +67,8 @@ script:
   - make test
   - cd ../build-shared
   - make test
+  - cd ..
+
+after_script:
+  - cd build-static
+  - make doxygen-doc
