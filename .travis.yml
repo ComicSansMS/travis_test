@@ -46,9 +46,17 @@ before_script:
   - git clone https://github.com/ComicSansMS/GhulbusBase.git gbBase
   - cd gbBase
   - cp ../CMakeLists.txt .
-  - cd build
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 ..
+  - mkdir build-static && mkdir build-shared
+  - cd build-static
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DBUILD_SHARED_LIBS=OFF ..
+  - make
+  - cd ../build-shared
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DBUILD_SHARED_LIBS=ON ..
+  - make
+  - cd ..
 
 script:
-  - make
+  - cd build-static
+  - make test
+  - cd build-shared
   - make test
