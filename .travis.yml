@@ -7,17 +7,17 @@ compiler:
 addons: &clang34
   apt:
     packages:
-        # compiler
+    # compiler
       - clang-3.6
       - g++-5
       - gcc-5
       - ninja-build
-      # doxygen
+    # doc tools
       - doxygen
       - graphviz
       # mscgen is currently not whitelisted :(
       #- mscgen
-      # third-party dependencies
+    # third-party dependencies
       - libboost1.55-dev
       - libboost-date-time1.55-dev
       - libboost-log1.55-dev
@@ -31,25 +31,22 @@ addons: &clang34
 
 install:
   - gcc-5 --version
-  #- clang-3.6 --version
+  - clang-3.6 --version
+  # install CMake 3.3
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
-  - wget http://cmake.org/files/v3.3/cmake-3.3.2.tar.gz
+  - travis_retry wget http://cmake.org/files/v3.3/cmake-3.3.2.tar.gz
   - tar -xvf cmake-3.3.2.tar.gz > /dev/null
   - mkdir cmake-build && mkdir cmake-install
   - cd cmake-build
-  - cmake
   - cmake -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/cmake-install -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 ../cmake-3.3.2 > cmake_configure.log
   - make -j 2 > cmake_compile.log
   - make install > cmake_install.log
-  - ls -lha ${DEPS_DIR}/cmake-install
   - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
   - which cmake
-  - ${DEPS_DIR}/cmake-install/bin/cmake --version
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - ls -lha
   - git clone https://github.com/ComicSansMS/GhulbusBase.git gbBase
   - cd gbBase
   - cp ../CMakeLists.txt .
