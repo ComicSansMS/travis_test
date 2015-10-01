@@ -32,6 +32,7 @@ addons: &clang34
 install:
   - gcc-5 --version
   - clang-3.6 --version
+  - env
   # install CMake 3.3
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
