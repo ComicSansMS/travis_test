@@ -67,6 +67,9 @@ before_script:
 script:
   - cd build-static-gcc5
   - make test
+  - gcov Assert.cpp
+  - gcov Log.cpp
+  - gcov LogHandlers.cpp
 #  - cd ../build-shared-gcc5
 #  - make test
 #  - cd ../build-static-clang36
