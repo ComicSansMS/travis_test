@@ -68,7 +68,7 @@ before_script:
 script:
   - cd build-static-gcc5
   - make test
-  - gcov -o ./CMakeFiles/gbBase.dir/src AssertAssert.cpp AssertLog.cpp AssertLogHandlers.cpp
+  - gcov -o ./CMakeFiles/gbBase.dir/src Assert.cpp Log.cpp LogHandlers.cpp
 #  - cd ../build-shared-gcc5
 #  - make test
 #  - cd ../build-static-clang36
