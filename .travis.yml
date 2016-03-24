@@ -51,7 +51,7 @@ before_script:
   - cp ../CMakeLists.txt .
   - mkdir build-static-gcc5 && mkdir build-shared-gcc5 && mkdir build-static-clang36 && mkdir build-shared-clang36
   - cd build-static-gcc5
-  - CFLAGS="-fprofile-arcs -ftest-coverage" CXXFLAGS="-fprofile-arcs -ftest-coverage" cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=OFF ..
+  - CFLAGS="-fprofile-arcs -ftest-coverage" CXXFLAGS="-fprofile-arcs -ftest-coverage" LDFLAGS="-fprofile-arcs -ftest-coverage" cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=OFF ..
   - make
   - find .
 #  - cd ../build-shared-gcc5
