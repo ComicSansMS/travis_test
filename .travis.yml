@@ -51,7 +51,7 @@ before_script:
   - cp ../CMakeLists.txt .
   - mkdir build-static-gcc5 && mkdir build-shared-gcc5 && mkdir build-static-clang36 && mkdir build-shared-clang36
   - cd build-static-gcc5
-  - CFLAGS="-fprofile-arcs -ftest-coverage" CXXFLAGS="-fprofile-arcs -ftest-coverage" LDFLAGS="-fprofile-arcs -ftest-coverage" cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=OFF ..
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=OFF -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-5 ..
   - make
   - find .
 #  - cd ../build-shared-gcc5
@@ -68,9 +68,10 @@ before_script:
 script:
   - cd build-static-gcc5
   - make test
-  - gcov-5 -o ./CMakeFiles/gbBase.dir/src/Assert.cpp.gcno Assert.cpp
-  - gcov-5 -o ./CMakeFiles/gbBase.dir/src/Log.cpp.gcno Log.cpp
-  - gcov-5 -o ./CMakeFiles/gbBase.dir/src/LogHandlers.cpp.gcno LogHandlers.cpp
+  - make gbBase_TestCoverage
+#  - gcov-5 -o ./CMakeFiles/gbBase.dir/src/Assert.cpp.gcno Assert.cpp
+#  - gcov-5 -o ./CMakeFiles/gbBase.dir/src/Log.cpp.gcno Log.cpp
+#  - gcov-5 -o ./CMakeFiles/gbBase.dir/src/LogHandlers.cpp.gcno LogHandlers.cpp
 #  - cd ../build-shared-gcc5
 #  - make test
 #  - cd ../build-static-clang36
