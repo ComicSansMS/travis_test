@@ -2,44 +2,47 @@
 language: cpp
 sudo: false
 
-matrix:
-    include:
-        - env:
-            - BUILD_TYPE=Release 
-            - BUILD_TYPE=Debug
-            - BUILD_SHARED_LIBS=On
-            - BUILD_SHARED_LIBS=Off
-        - compiler:
-            - gcc
 
-addons: &clang34
-  apt:
-    packages:
-    # compiler
-      - clang-3.6
-      - g++-5
-      - gcc-5
-      - ninja-build
-    # doc tools
-      - doxygen
-      - graphviz
-      # mscgen is currently not whitelisted :(
-      #- mscgen
-    # third-party dependencies
-      - libboost1.55-dev
-      - libboost-date-time1.55-dev
-      - libboost-log1.55-dev
-      - libboost-thread1.55-dev
-      - libboost-wave1.55-dev
-      - libboost1.55-all-dev
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.6
-      - boost-latest
+matrix:
+  include:
+    - env: COMPILER=g++-5 BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
+    - compiler: gcc
+    - addons: &gcc5
+      apt:
+        packages:
+          - g++-5
+          - gcc-5
+          - doxygen
+          - graphviz
+          - libboost1.55-dev
+          - libboost-date-time1.55-dev
+          - libboost-log1.55-dev
+          - libboost-thread1.55-dev
+          - libboost-wave1.55-dev
+          - libboost1.55-all-dev
+        sources: &sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-precise-3.6
+          - boost-latest
+    - env: COMPILER=clang++-3.6 BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
+    - compiler: clang
+    - addons: &clang36
+      apt:
+        packages:
+          - clang-3.6
+          - doxygen
+          - graphviz
+          - libboost1.55-dev
+          - libboost-date-time1.55-dev
+          - libboost-log1.55-dev
+          - libboost-thread1.55-dev
+          - libboost-wave1.55-dev
+          - libboost1.55-all-dev
+        sources: *sources
 
 install:
-  - gcc-5 --version
-  - clang-3.6 --version
+  - which ${COMPILER}
+  - ${COMPILER} --version
   - env
   # install CMake 3.3
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
@@ -57,9 +60,9 @@ before_script:
   - git clone https://github.com/ComicSansMS/GhulbusBase.git gbBase
   - cd gbBase
   - cp ../CMakeLists.txt .
-  - mkdir build-gcc5
-  - cd build-gcc5
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} ..
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_CXX_COMPILER=${COMPILER} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} ..
   - make
 #  - mkdir build-static-gcc5 && mkdir build-shared-gcc5 && mkdir build-static-clang36 && mkdir build-shared-clang36
 #  - cd build-static-gcc5
@@ -78,9 +81,9 @@ before_script:
   - cd ${TRAVIS_BUILD_DIR}/gbBase
 
 script:
-  - cd build-static-gcc5
+  - cd build
   - make test
-  - make gbBase_TestCoverage
+#  - make gbBase_TestCoverage
 #  - gcov-5 -o ./CMakeFiles/gbBase.dir/src/Assert.cpp.gcno Assert.cpp
 #  - gcov-5 -o ./CMakeFiles/gbBase.dir/src/Log.cpp.gcno Log.cpp
 #  - gcov-5 -o ./CMakeFiles/gbBase.dir/src/LogHandlers.cpp.gcno LogHandlers.cpp
@@ -93,7 +96,7 @@ script:
 
 after_script:
   - cd ${TRAVIS_BUILD_DIR}/gbBase
-  - cd build-static-gcc5
+  - cd build
   - make doxygen-doc
 
 after_success:
