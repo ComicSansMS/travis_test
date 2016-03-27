@@ -20,7 +20,7 @@ matrix:
           - libboost-thread1.55-dev
           - libboost-wave1.55-dev
           - libboost1.55-all-dev
-        sources: &sources:
+        sources: &sources
           - ubuntu-toolchain-r-test
           - llvm-toolchain-precise-3.6
           - boost-latest
