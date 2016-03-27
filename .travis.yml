@@ -1,11 +1,14 @@
 
 language: cpp
 sudo: false
-os: linux
+
+env:
+    - BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
+    - BUILD_TYPE=Debug BUILD_SHARED_LIBS=OFF
 
 matrix:
   include:
-    - env: COMPILER=g++-5 BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
+    - env: COMPILER=g++-5
       compiler: gcc
       addons: &gcc5
         apt:
@@ -60,7 +63,6 @@ before_script:
   - git clone https://github.com/ComicSansMS/GhulbusBase.git gbBase
   - cd gbBase
   - cp ../CMakeLists.txt .
-  - mkdir build
   - cd build
   - cmake -DCMAKE_CXX_COMPILER=${COMPILER} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} ..
   - make
