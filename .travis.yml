@@ -78,21 +78,21 @@ before_script:
   - cd gbBase
   - cp ../CMakeLists.txt .
   - cd build
-  - cmake -DCMAKE_COMPILER_CXX=${COMPILER_CXX} -DCMAKE_C_COMPILER=${COMPILER_CC} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} ..
+  - cmake -DCMAKE_CXX_COMPILER=${COMPILER_CXX} -DCMAKE_C_COMPILER=${COMPILER_CC} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} ..
   - make
 #  - mkdir build-static-gcc5 && mkdir build-shared-gcc5 && mkdir build-static-clang36 && mkdir build-shared-clang36
 #  - cd build-static-gcc5
-#  - cmake -DCMAKE_COMPILER_CXX=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-5 ..
+#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-5 ..
 #  - make
 #  - find .
 #  - cd ../build-shared-gcc5
-#  - cmake -DCMAKE_COMPILER_CXX=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
+#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
 #  - make
 #  - cd ../build-static-clang36
-#  - cmake -DCMAKE_COMPILER_CXX=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
+#  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
 #  - make
 #  - cd ../build-shared-clang36
-#  - cmake -DCMAKE_COMPILER_CXX=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
+#  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
 #  - make
   - cd ${TRAVIS_BUILD_DIR}/gbBase
 
