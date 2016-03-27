@@ -4,7 +4,7 @@ sudo: false
 
 matrix:
   include:
-    - env: CC=gcc-5 CXX=g++-5 BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
+    - env: COMPILER_CC=gcc-5 COMPILER_CXX=g++-5 BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
       compiler: gcc
       addons: &gcc5
         apt:
@@ -23,16 +23,16 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-precise-3.6
             - boost-latest
-    - env: CC=gcc-5 CXX=g++-5 BUILD_TYPE=Debug BUILD_SHARED_LIBS=OFF
+    - env: COMPILER_CC=gcc-5 COMPILER_CXX=g++-5 BUILD_TYPE=Debug BUILD_SHARED_LIBS=OFF
       compiler: gcc
       addons: *gcc5
-    - env: CC=gcc-5 CXX=g++-5 BUILD_TYPE=Release BUILD_SHARED_LIBS=ON
+    - env: COMPILER_CC=gcc-5 COMPILER_CXX=g++-5 BUILD_TYPE=Release BUILD_SHARED_LIBS=ON
       compiler: gcc
       addons: *gcc5
-    - env: CC=gcc-5 CXX=g++-5 BUILD_TYPE=Release BUILD_SHARED_LIBS=OFF
+    - env: COMPILER_CC=gcc-5 COMPILER_CXX=g++-5 BUILD_TYPE=Release BUILD_SHARED_LIBS=OFF
       compiler: gcc
       addons: *gcc5
-    - env: CC=clang-3.6 CXX=clang++-3.6 BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
+    - env: COMPILER_CC=clang-3.6 COMPILER_CXX=clang++-3.6 BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
       compiler: clang
       addons: &clang36
         apt:
@@ -47,19 +47,19 @@ matrix:
             - libboost-wave1.55-dev
             - libboost1.55-all-dev
           sources: *sources
-    - env: CC=clang-3.6 CXX=clang++-3.6 BUILD_TYPE=Debug BUILD_SHARED_LIBS=OFF
+    - env: COMPILER_CC=clang-3.6 COMPILER_CXX=clang++-3.6 BUILD_TYPE=Debug BUILD_SHARED_LIBS=OFF
       compiler: clang
       addons: *clang36
-    - env: CC=clang-3.6 CXX=clang++-3.6 BUILD_TYPE=Release BUILD_SHARED_LIBS=ON
+    - env: COMPILER_CC=clang-3.6 COMPILER_CXX=clang++-3.6 BUILD_TYPE=Release BUILD_SHARED_LIBS=ON
       compiler: clang
       addons: *clang36
-    - env: CC=clang-3.6 CXX=clang++-3.6 BUILD_TYPE=Release BUILD_SHARED_LIBS=OFF
+    - env: COMPILER_CC=clang-3.6 COMPILER_CXX=clang++-3.6 BUILD_TYPE=Release BUILD_SHARED_LIBS=OFF
       compiler: clang
       addons: *clang36
 
 install:
-  - which ${CXX}
-  - ${CXX} --version
+  - which ${COMPILER_CXX}
+  - ${COMPILER_CXX} --version
   - env
   # install CMake 3.3
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
@@ -78,21 +78,21 @@ before_script:
   - cd gbBase
   - cp ../CMakeLists.txt .
   - cd build
-  - cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} ..
+  - cmake -DCMAKE_COMPILER_CXX=${COMPILER_CXX} -DCMAKE_C_COMPILER=${COMPILER_CC} -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} ..
   - make
 #  - mkdir build-static-gcc5 && mkdir build-shared-gcc5 && mkdir build-static-clang36 && mkdir build-shared-clang36
 #  - cd build-static-gcc5
-#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-5 ..
+#  - cmake -DCMAKE_COMPILER_CXX=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS} -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-5 ..
 #  - make
 #  - find .
 #  - cd ../build-shared-gcc5
-#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
+#  - cmake -DCMAKE_COMPILER_CXX=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
 #  - make
 #  - cd ../build-static-clang36
-#  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
+#  - cmake -DCMAKE_COMPILER_CXX=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
 #  - make
 #  - cd ../build-shared-clang36
-#  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
+#  - cmake -DCMAKE_COMPILER_CXX=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
 #  - make
   - cd ${TRAVIS_BUILD_DIR}/gbBase
 
