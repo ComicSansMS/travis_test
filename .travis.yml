@@ -8,37 +8,37 @@ matrix:
     - env: COMPILER=g++-5 BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
       compiler: gcc
       addons: &gcc5
-      apt:
-        packages:
-          - g++-5
-          - gcc-5
-          - doxygen
-          - graphviz
-          - libboost1.55-dev
-          - libboost-date-time1.55-dev
-          - libboost-log1.55-dev
-          - libboost-thread1.55-dev
-          - libboost-wave1.55-dev
-          - libboost1.55-all-dev
-        sources: &sources
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-precise-3.6
-          - boost-latest
+        apt:
+          packages:
+            - g++-5
+            - gcc-5
+            - doxygen
+            - graphviz
+            - libboost1.55-dev
+            - libboost-date-time1.55-dev
+            - libboost-log1.55-dev
+            - libboost-thread1.55-dev
+            - libboost-wave1.55-dev
+            - libboost1.55-all-dev
+          sources: &sources
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+            - boost-latest
     - env: COMPILER=clang++-3.6 BUILD_TYPE=Debug BUILD_SHARED_LIBS=ON
       compiler: clang
       addons: &clang36
-      apt:
-        packages:
-          - clang-3.6
-          - doxygen
-          - graphviz
-          - libboost1.55-dev
-          - libboost-date-time1.55-dev
-          - libboost-log1.55-dev
-          - libboost-thread1.55-dev
-          - libboost-wave1.55-dev
-          - libboost1.55-all-dev
-        sources: *sources
+        apt:
+          packages:
+            - clang-3.6
+            - doxygen
+            - graphviz
+            - libboost1.55-dev
+            - libboost-date-time1.55-dev
+            - libboost-log1.55-dev
+            - libboost-thread1.55-dev
+            - libboost-wave1.55-dev
+            - libboost1.55-all-dev
+          sources: *sources
 
 install:
   - which ${COMPILER}
