@@ -10,6 +10,7 @@ addons:
     sources:
       - george-edison55-precise-backports
     packages:
+      - gcc-4.8
       - cmake
       - cmake-data
       - doxygen
@@ -17,6 +18,8 @@ addons:
 
 install:
   - env
+  - gcc --version
+  - gcc-4.8 --version
   - cmake --version
 
 before_script:
