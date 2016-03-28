@@ -13,7 +13,7 @@ addons:
       - cmake
       - cmake-data
       - doxygen
-
+      - libudev-dev
 
 install:
   - env
