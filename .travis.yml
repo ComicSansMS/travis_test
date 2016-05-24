@@ -4,36 +4,91 @@ sudo: false
 
 compiler:
   - gcc
-
-addons:
+addons: &clang34
   apt:
-    sources:
-      - george-edison55-precise-backports
-      - ubuntu-toolchain-r-test
     packages:
-      - gcc-4.8
-      - g++-4.8
-      - cmake
-      - cmake-data
+    # compiler
+      - clang-3.6
+      - g++-5
+      - gcc-5
+      - ninja-build
+    # doc tools
       - doxygen
-      - libudev-dev
+      - graphviz
+      # mscgen is currently not whitelisted :(
+      #- mscgen
+    # third-party dependencies
+      - libboost1.55-dev
+      - libboost-date-time1.55-dev
+      - libboost-log1.55-dev
+      - libboost-thread1.55-dev
+      - libboost-wave1.55-dev
+      - libboost1.55-all-dev
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.6
+      - boost-latest
 
 install:
-  - env
-  - if [ "$CC" == "gcc" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-  - cmake --version
+  - gcc-5 --version
+  - clang-3.6 --version
+  # install CMake 3.3
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
+  - echo "f3546812c11ce7f5d64dc132a566b749 *cmake-3.3.2-Linux-x86_64.tar.gz" > cmake_md5.txt
+  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz
+  - md5sum -c cmake_md5.txt
+  - tar -xvf cmake-3.3.2-Linux-x86_64.tar.gz > /dev/null
+  - mv cmake-3.3.2-Linux-x86_64 cmake-install
+  - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
+  - which cmake
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - mkdir libstratcom
-  - git clone https://github.com/ComicSansMS/libstratcom.git libstratcom
-  - cd libstratcom/build
-  - cmake -DBUILD_EXAMPLE_APPLICATIONS=ON -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR}/INSTALL ..
+  - git clone https://github.com/ComicSansMS/GhulbusAudio.git gbAudio
+  - cd gbAudio
+  - mkdir build-static-gcc5 && mkdir build-shared-gcc5 && mkdir build-bare-gcc5 && mkdir build-coverage-gcc5 && mkdir build-static-clang36 && mkdir build-shared-clang36
+  - cd build-static-gcc5
+  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
+  - make
+#  - cd ../build-shared-gcc5
+#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
+#  - make
+#  - cd ../build-bare-gcc5
+#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DGB_BASE_BUILD_BARE=ON ..
+#  - make
+#  - cd ../build-coverage-gcc5
+#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=OFF -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-5 ..
+#  - make
+#  - cd ../build-static-clang36
+#  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
+#  - make
+#  - cd ../build-shared-clang36
+#  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
+#  - make
+  - cd ${TRAVIS_BUILD_DIR}/gbAudio
 
 script:
-  - cd ${TRAVIS_BUILD_DIR}/libstratcom/build
-  - make
+  - cd build-static-gcc5
+  - make test
+#  - cd ../build-shared-gcc5
+#  - make test
+#  - cd ../build-bare-gcc5
+#  - make test
+#  - cd ../build-coverage-gcc5
+#  - make test
+#  - cd ../build-static-clang36
+#  - make test
+#  - cd ../build-shared-clang36
+#  - make test
 
 after_script:
-  - cd ${TRAVIS_BUILD_DIR}/libstratcom/build
+  - cd ${TRAVIS_BUILD_DIR}/gbAudio
+  - cd build-static-gcc5
   - make doxygen-doc
+
+#after_success:
+#  - cd ${TRAVIS_BUILD_DIR}/gbAudio/build-coverage-gcc5
+#  - make gbAudio_TestCoverage
+#  - bash <(curl -s https://codecov.io/bash)
+
