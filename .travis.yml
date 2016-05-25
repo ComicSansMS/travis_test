@@ -24,6 +24,7 @@ addons: &clang34
       - libboost-thread1.55-dev
       - libboost-wave1.55-dev
       - libboost1.55-all-dev
+      - libopenal-dev
     sources:
       - ubuntu-toolchain-r-test
       - llvm-toolchain-precise-3.6
