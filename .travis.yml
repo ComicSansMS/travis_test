@@ -99,4 +99,3 @@ after_script:
 #  - cd ${TRAVIS_BUILD_DIR}/gbAudio/build-coverage-gcc5
 #  - make gbAudio_TestCoverage
 #  - bash <(curl -s https://codecov.io/bash)
-
