@@ -13,21 +13,31 @@ matrix:
     - env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
       addons: { apt: { packages: ["g++-7", "ninja-build", "doxygen", "graphviz", "mscgen"], sources: ["ubuntu-toolchain-r-test"] } }
 
+    - os: osx
+      env: MATRIX_EVAL="CC=clang && CXX=clang++"
+
 install:
   - eval "${MATRIX_EVAL}"
 
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
   - mkdir -p ${DEPS_DIR}
+  - cd ${DEPS_DIR}
 
   # install CMake 3.10
-  - cd ${DEPS_DIR}
-  - echo "020740ee9132f55aa529782ee9f578ec *cmake-3.10.0-Linux-x86_64.tar.gz" > cmake_md5.txt
-  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz
-  - md5sum -c cmake_md5.txt
-  - tar -xvf cmake-3.10.0-Linux-x86_64.tar.gz > /dev/null
-  - mv cmake-3.10.0-Linux-x86_64 cmake-install
+  - |
+    if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+        echo "020740ee9132f55aa529782ee9f578ec *cmake-3.10.0-Linux-x86_64.tar.gz" > cmake_md5.txt
+        travis_retry wget --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz
+        md5sum -c cmake_md5.txt
+        tar -xvf cmake-3.10.0-Linux-x86_64.tar.gz > /dev/null
+        mv cmake-3.10.0-Linux-x86_64 cmake-install
+        which cmake
   - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
+    else if [ "$TRAVIS_OS_NAME" = "osx" ]; then
+        brew install cmake || brew upgrade cmake
+    fi
   - which cmake
+  - cmake --version
 
   # install libcxx
   - cd ${DEPS_DIR}
