@@ -1,101 +1,90 @@
 
 language: cpp
+os: linux
+dist: trusty
+group: travis_latest
 sudo: false
 
-compiler:
-  - gcc
-addons: &clang34
-  apt:
-    packages:
-    # compiler
-      - clang-3.6
-      - g++-5
-      - gcc-5
-      - ninja-build
-    # doc tools
-      - doxygen
-      - graphviz
-      # mscgen is currently not whitelisted :(
-      #- mscgen
-    # third-party dependencies
-      - libboost1.55-dev
-      - libboost-date-time1.55-dev
-      - libboost-log1.55-dev
-      - libboost-thread1.55-dev
-      - libboost-wave1.55-dev
-      - libboost1.55-all-dev
-      - libopenal-dev
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.6
-      - boost-latest
+matrix:
+  include:
+    - env: MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
+      addons: { apt: { packages: ["clang-4.0"], sources: ["llvm-toolchain-trusty-4.0", "ubuntu-toolchain-r-test"] } }
+
+    - env: MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      addons: { apt: { packages: ["g++-7", "ninja-build", "doxygen", "graphviz", "mscgen"], sources: ["ubuntu-toolchain-r-test"] } }
 
 install:
-  - gcc-5 --version
-  - clang-3.6 --version
-  # install CMake 3.3
+  - eval "${MATRIX_EVAL}"
+
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
-  - mkdir ${DEPS_DIR} && cd ${DEPS_DIR}
-  - echo "f3546812c11ce7f5d64dc132a566b749 *cmake-3.3.2-Linux-x86_64.tar.gz" > cmake_md5.txt
-  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz
+  - mkdir -p ${DEPS_DIR}
+
+  # install CMake 3.10
+  - cd ${DEPS_DIR}
+  - echo "020740ee9132f55aa529782ee9f578ec *cmake-3.10.0-Linux-x86_64.tar.gz" > cmake_md5.txt
+  - travis_retry wget --no-check-certificate https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz
   - md5sum -c cmake_md5.txt
-  - tar -xvf cmake-3.3.2-Linux-x86_64.tar.gz > /dev/null
-  - mv cmake-3.3.2-Linux-x86_64 cmake-install
+  - tar -xvf cmake-3.10.0-Linux-x86_64.tar.gz > /dev/null
+  - mv cmake-3.10.0-Linux-x86_64 cmake-install
   - PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
   - which cmake
 
+  # install libcxx
+  - cd ${DEPS_DIR}
+  - |
+    if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+      if [[ "${CXX%%+*}" == "clang" ]]; then
+        if [[ "${CXX}" == "clang++-4.0" ]]; then LLVM_VERSION="4.0.0";
+        fi
+        LLVM_URL="http://llvm.org/releases/${LLVM_VERSION}/llvm-${LLVM_VERSION}.src.tar.xz"
+        LIBCXX_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxx-${LLVM_VERSION}.src.tar.xz"
+        LIBCXXABI_URL="http://llvm.org/releases/${LLVM_VERSION}/libcxxabi-${LLVM_VERSION}.src.tar.xz"
+        mkdir -p llvm llvm/build llvm/projects/libcxx llvm/projects/libcxxabi
+        travis_retry wget -O - ${LLVM_URL} | tar --strip-components=1 -xJ -C llvm
+        travis_retry wget -O - ${LIBCXX_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxx
+        travis_retry wget -O - ${LIBCXXABI_URL} | tar --strip-components=1 -xJ -C llvm/projects/libcxxabi
+        (cd llvm/build && cmake .. -DCMAKE_INSTALL_PREFIX=${DEPS_DIR}/llvm/install)
+        (cd llvm/build/projects/libcxx && make install -j2)
+        (cd llvm/build/projects/libcxxabi && make install -j2)
+        export CXXFLAGS="-isystem ${DEPS_DIR}/llvm/install/include/c++/v1"
+        export LDFLAGS="-L ${DEPS_DIR}/llvm/install/lib -l c++ -l c++abi"
+        export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${DEPS_DIR}/llvm/install/lib"
+      fi
+    fi
+
+  - ${CXX} --version
+
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
-  - git clone https://github.com/ComicSansMS/GhulbusBase.git gbBase
-  - cd gbBase
-  - mkdir base-static-gcc5
-  - cd base-static-gcc5
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DGB_BUILD_TESTS=OFF -DGB_GENERATE_DOXYGEN_DOCUMENTATION=OFF -DCMAKE_INSTALL_PREFIX=${TRAVIS_BUILD_DIR}/base-static-gcc5_INSTALL ..
-  - make && make install
-  - cd ${TRAVIS_BUILD_DIR}
-  - git clone https://github.com/ComicSansMS/GhulbusAudio.git gbAudio
-  - cd gbAudio
-  - mkdir build-static-gcc5 && mkdir build-shared-gcc5 && mkdir build-bare-gcc5 && mkdir build-coverage-gcc5 && mkdir build-static-clang36 && mkdir build-shared-clang36
-  - cd build-static-gcc5
-  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DGHULBUS_BASE_ROOT=${TRAVIS_BUILD_DIR}/base-static-gcc5_INSTALL ..
-  - make
-#  - cd ../build-shared-gcc5
-#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
-#  - make
-#  - cd ../build-bare-gcc5
-#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF -DGB_BASE_BUILD_BARE=ON ..
-#  - make
-#  - cd ../build-coverage-gcc5
-#  - cmake -DCMAKE_CXX_COMPILER=g++-5 -DCMAKE_C_COMPILER=gcc-5 -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=OFF -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-5 ..
-#  - make
-#  - cd ../build-static-clang36
-#  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF ..
-#  - make
-#  - cd ../build-shared-clang36
-#  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON ..
-#  - make
-  - cd ${TRAVIS_BUILD_DIR}/gbAudio
+  - git clone https://github.com/ComicSansMS/GhulbusMath.git gbMath
+  - cd gbMath
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Release ..
+  - cmake --build .
+  - |
+    if [[ "${CXX}" == "g++-7" ]]; then
+        cd ${TRAVIS_BUILD_DIR}/gbMath
+        mkdir build-coverage
+        cd build-coverage
+        cmake -DCMAKE_BUILD_TYPE=Debug -DGB_GENERATE_COVERAGE_INFO=ON -DGCOV_COMMAND=gcov-7 ..
+        cmake --build .
+    fi
+  - cd ${TRAVIS_BUILD_DIR}/gbMath
 
 script:
-  - cd build-static-gcc5
-  - make test
-#  - cd ../build-shared-gcc5
-#  - make test
-#  - cd ../build-bare-gcc5
-#  - make test
-#  - cd ../build-coverage-gcc5
-#  - make test
-#  - cd ../build-static-clang36
-#  - make test
-#  - cd ../build-shared-clang36
-#  - make test
-
-after_script:
-  - cd ${TRAVIS_BUILD_DIR}/gbAudio
-  - cd build-static-gcc5
-  - make doxygen-doc
+  - cd build
+  - ctest -C Release
+  - |
+    if [[ "${CXX}" == "g++-7" ]]; then
+        cd ../build-coverage
+        ctest -C Debug
+    fi
+  - cd ${TRAVIS_BUILD_DIR}/gbMath
 
 #after_success:
-#  - cd ${TRAVIS_BUILD_DIR}/gbAudio/build-coverage-gcc5
-#  - make gbAudio_TestCoverage
-#  - bash <(curl -s https://codecov.io/bash)
+#  - |
+#    if [[ "${CXX}" == "g++-7" ]]; then
+#        cd ${TRAVIS_BUILD_DIR}/build-coverage
+#        cmake --build . --target gbMath_TestCoverage
+#        bash <(curl -s https://codecov.io/bash)
+#    fi
