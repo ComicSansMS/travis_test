@@ -35,7 +35,7 @@ install:
         which cmake
         PATH=${DEPS_DIR}/cmake-install:${DEPS_DIR}/cmake-install/bin:$PATH
     elif [ "$TRAVIS_OS_NAME" == "osx" ]; then
-        brew install cmake || brew upgrade cmake
+        brew install cmake doxygen graphviz || brew upgrade cmake doxygen graphviz
     fi
   - which cmake
   - cmake --version
@@ -64,6 +64,7 @@ install:
     fi
 
   - ${CXX} --version
+  - ninja --version
 
 before_script:
   - cd ${TRAVIS_BUILD_DIR}
